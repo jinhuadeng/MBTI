@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 
 <head>
@@ -17,6 +17,190 @@
     <script src="./static/js/bootstrap.min.js"></script>
     <script src="./static/js/printProjectInfo.js"></script>
     <script type="text/javascript" src="./static/js/jquery.cookie.js"></script>
+    
+    <style>
+        /* 用户信息输入表单样式 */
+        .user-info-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .user-info-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .datetime-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .datetime-item {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .datetime-item label {
+            font-size: 14px;
+        }
+
+        /* 时辰选择器样式 */
+        .time-period {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-option {
+            display: none;
+        }
+
+        .time-label {
+            display: block;
+            padding: 12px 8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: white;
+        }
+
+        .time-option:checked + .time-label {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-color: #fff;
+            transform: scale(1.02);
+            font-weight: 600;
+        }
+
+        .time-label:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-validation {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .validation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .validation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .validation-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .validation-icon.valid {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .validation-icon.invalid {
+            background: #f44336;
+            color: white;
+        }
+
+        /* 修改原有的开始按钮样式，使其在表单验证通过后才可点击 */
+        .a-btn.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .user-info-section {
+                margin: 20px -15px;
+                border-radius: 0;
+                padding: 20px;
+            }
+            
+            .datetime-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .time-period {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .time-label {
+                padding: 10px 5px;
+                font-size: 12px;
+            }
+        }
+
+        /* 增强表单交互效果 */
+        .form-group.focused input,
+        .form-group.focused select {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body>
@@ -77,6 +261,109 @@
                 </div>
             </div>
 
+            <!-- 用户信息输入区域 -->
+            <div class="user-info-section">
+                <h3 class="user-info-title">请填写您的基本信息</h3>
+                <form id="userInfoForm">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="userName">姓名 *</label>
+                                <input type="text" id="userName" name="userName" required placeholder="请输入您的姓名" maxlength="20">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>出生日期 *</label>
+                                <div class="datetime-row">
+                                    <div class="datetime-item">
+                                        <label for="birthYear">年</label>
+                                        <select id="birthYear" name="birthYear" required>
+                                            <option value="">选择年份</option>
+                                        </select>
+                                    </div>
+                                    <div class="datetime-item">
+                                        <label for="birthMonth">月</label>
+                                        <select id="birthMonth" name="birthMonth" required>
+                                            <option value="">选择月份</option>
+                                        </select>
+                                    </div>
+                                    <div class="datetime-item">
+                                        <label for="birthDay">日</label>
+                                        <select id="birthDay" name="birthDay" required>
+                                            <option value="">选择日期</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>出生时辰 *</label>
+                                <div class="time-period">
+                                    <input type="radio" id="zishi" name="birthTime" value="子时(23:00-01:00)" class="time-option" required>
+                                    <label for="zishi" class="time-label">子时<br>23:00-01:00</label>
+
+                                    <input type="radio" id="choushi" name="birthTime" value="丑时(01:00-03:00)" class="time-option">
+                                    <label for="choushi" class="time-label">丑时<br>01:00-03:00</label>
+
+                                    <input type="radio" id="yinshi" name="birthTime" value="寅时(03:00-05:00)" class="time-option">
+                                    <label for="yinshi" class="time-label">寅时<br>03:00-05:00</label>
+
+                                    <input type="radio" id="maoshi" name="birthTime" value="卯时(05:00-07:00)" class="time-option">
+                                    <label for="maoshi" class="time-label">卯时<br>05:00-07:00</label>
+
+                                    <input type="radio" id="chenshi" name="birthTime" value="辰时(07:00-09:00)" class="time-option">
+                                    <label for="chenshi" class="time-label">辰时<br>07:00-09:00</label>
+
+                                    <input type="radio" id="sishi" name="birthTime" value="巳时(09:00-11:00)" class="time-option">
+                                    <label for="sishi" class="time-label">巳时<br>09:00-11:00</label>
+
+                                    <input type="radio" id="wushi" name="birthTime" value="午时(11:00-13:00)" class="time-option">
+                                    <label for="wushi" class="time-label">午时<br>11:00-13:00</label>
+
+                                    <input type="radio" id="weishi" name="birthTime" value="未时(13:00-15:00)" class="time-option">
+                                    <label for="weishi" class="time-label">未时<br>13:00-15:00</label>
+
+                                    <input type="radio" id="shenshi" name="birthTime" value="申时(15:00-17:00)" class="time-option">
+                                    <label for="shenshi" class="time-label">申时<br>15:00-17:00</label>
+
+                                    <input type="radio" id="youshi" name="birthTime" value="酉时(17:00-19:00)" class="time-option">
+                                    <label for="youshi" class="time-label">酉时<br>17:00-19:00</label>
+
+                                    <input type="radio" id="xushi" name="birthTime" value="戌时(19:00-21:00)" class="time-option">
+                                    <label for="xushi" class="time-label">戌时<br>19:00-21:00</label>
+
+                                    <input type="radio" id="haishi" name="birthTime" value="亥时(21:00-23:00)" class="time-option">
+                                    <label for="haishi" class="time-label">亥时<br>21:00-23:00</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 表单验证状态显示 -->
+                    <div class="form-validation" id="formValidation">
+                        <div class="validation-item" id="nameValidation">
+                            <span class="validation-icon">?</span>
+                            <span>请填写姓名</span>
+                        </div>
+                        <div class="validation-item" id="dateValidation">
+                            <span class="validation-icon">?</span>
+                            <span>请选择出生日期</span>
+                        </div>
+                        <div class="validation-item" id="timeValidation">
+                            <span class="validation-icon">?</span>
+                            <span>请选择出生时辰</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class="bs-docs-section">
                 <div class="row">
@@ -95,12 +382,255 @@
                 </div>
             </div>
 
-            <a href="./MBTI.html" class="a-btn">
+            <a href="./MBTI.html" class="a-btn disabled" id="startTestBtn">
                 <span></span>
                 <span>Start</span>
                 <span>Go!</span>
             </a>
         </div>
+
+        <script>
+            // 确保在DOM完全加载后执行
+            $(document).ready(function () {
+                console.log('页面加载完成，开始初始化');
+                
+                // 延迟执行初始化，确保所有元素都已渲染
+                setTimeout(function() {
+                    initDateSelectors();
+                    setupFormValidation();
+                    loadSavedUserInfo();
+                }, 100);
+                
+                // 开始测试按钮点击事件
+                $('#startTestBtn').on('click', function(e) {
+                    if ($(this).hasClass('disabled')) {
+                        e.preventDefault();
+                        alert('请先完整填写个人信息');
+                        return false;
+                    }
+                    
+                    // 保存用户信息
+                    saveUserInfo();
+                });
+            });
+
+            // 初始化日期选择器
+            function initDateSelectors() {
+                console.log('开始初始化日期选择器');
+                
+                const currentYear = new Date().getFullYear();
+                const yearSelect = $('#birthYear');
+                const monthSelect = $('#birthMonth');
+                const daySelect = $('#birthDay');
+                
+                // 检查元素是否存在
+                if (!yearSelect.length || !monthSelect.length || !daySelect.length) {
+                    console.error('日期选择器元素未找到');
+                    return;
+                }
+                
+                // 清空现有选项
+                yearSelect.empty().append('<option value="">选择年份</option>');
+                monthSelect.empty().append('<option value="">选择月份</option>');
+                daySelect.empty().append('<option value="">选择日期</option>');
+                
+                // 填充年份选项（从1950到当前年份）
+                console.log('填充年份选项');
+                for (let year = currentYear; year >= 1950; year--) {
+                    yearSelect.append(`<option value="${year}">${year}年</option>`);
+                }
+                
+                // 填充月份选项
+                console.log('填充月份选项');
+                for (let month = 1; month <= 12; month++) {
+                    monthSelect.append(`<option value="${month}">${month}月</option>`);
+                }
+                
+                console.log('年份选项数量:', yearSelect.find('option').length);
+                console.log('月份选项数量:', monthSelect.find('option').length);
+                
+                // 绑定事件
+                yearSelect.off('change').on('change', function() {
+                    console.log('年份改变:', $(this).val());
+                    updateDayOptions();
+                    validateForm();
+                });
+                
+                monthSelect.off('change').on('change', function() {
+                    console.log('月份改变:', $(this).val());
+                    updateDayOptions();
+                    validateForm();
+                });
+                
+                daySelect.off('change').on('change', function() {
+                    console.log('日期改变:', $(this).val());
+                    validateForm();
+                });
+                
+                // 更新日期选项的函数
+                function updateDayOptions() {
+                    const year = parseInt(yearSelect.val()) || currentYear;
+                    const month = parseInt(monthSelect.val());
+                    
+                    console.log('更新日期选项，年:', year, '月:', month);
+                    
+                    daySelect.empty().append('<option value="">选择日期</option>');
+                    
+                    if (month) {
+                        const daysInMonth = new Date(year, month, 0).getDate();
+                        console.log('该月天数:', daysInMonth);
+                        
+                        for (let day = 1; day <= daysInMonth; day++) {
+                            daySelect.append(`<option value="${day}">${day}日</option>`);
+                        }
+                        
+                        console.log('日期选项数量:', daySelect.find('option').length);
+                    }
+                }
+                
+                console.log('日期选择器初始化完成');
+            }
+
+            // 设置表单验证
+            function setupFormValidation() {
+                console.log('设置表单验证');
+                
+                // 姓名输入验证
+                $('#userName').off('input blur').on('input blur', function() {
+                    validateForm();
+                });
+                
+                // 时辰选择验证
+                $('input[name="birthTime"]').off('change').on('change', function() {
+                    validateForm();
+                });
+                
+                // 输入框焦点效果
+                $('input, select').off('focus blur').on('focus', function() {
+                    $(this).parent().addClass('focused');
+                }).on('blur', function() {
+                    $(this).parent().removeClass('focused');
+                });
+            }
+
+            // 验证表单
+            function validateForm() {
+                const name = $('#userName').val().trim();
+                const year = $('#birthYear').val();
+                const month = $('#birthMonth').val();
+                const day = $('#birthDay').val();
+                const time = $('input[name="birthTime"]:checked').val();
+                
+                console.log('验证表单:', {name, year, month, day, time});
+                
+                // 验证姓名
+                const nameValid = name.length > 0 && name.length <= 20;
+                updateValidationItem('nameValidation', nameValid, nameValid ? '姓名填写完成' : '请填写姓名（1-20个字符）');
+                
+                // 验证日期
+                const dateValid = year && month && day;
+                updateValidationItem('dateValidation', dateValid, dateValid ? '出生日期选择完成' : '请选择完整的出生日期');
+                
+                // 验证时辰
+                const timeValid = !!time;
+                updateValidationItem('timeValidation', timeValid, timeValid ? '出生时辰选择完成' : '请选择出生时辰');
+                
+                // 更新开始按钮状态
+                const allValid = nameValid && dateValid && timeValid;
+                if (allValid) {
+                    $('#startTestBtn').removeClass('disabled');
+                } else {
+                    $('#startTestBtn').addClass('disabled');
+                }
+                
+                return allValid;
+            }
+
+            // 更新验证项状态
+            function updateValidationItem(itemId, isValid, message) {
+                const item = $('#' + itemId);
+                const icon = item.find('.validation-icon');
+                const text = item.find('span:last-child');
+                
+                if (isValid) {
+                    icon.removeClass('invalid').addClass('valid').text('✓');
+                } else {
+                    icon.removeClass('valid').addClass('invalid').text('✗');
+                }
+                
+                text.text(message);
+            }
+
+            // 保存用户信息
+            function saveUserInfo() {
+                const userData = {
+                    name: $('#userName').val().trim(),
+                    birthYear: $('#birthYear').val(),
+                    birthMonth: $('#birthMonth').val(),
+                    birthDay: $('#birthDay').val(),
+                    birthTime: $('input[name="birthTime"]:checked').val(),
+                    timestamp: new Date().toISOString()
+                };
+                
+                try {
+                    // 保存到localStorage
+                    localStorage.setItem('userInfo', JSON.stringify(userData));
+                    
+                    // 也可以保存到cookie（如果jquery.cookie.js加载成功）
+                    if (typeof $.cookie === 'function') {
+                        $.cookie('userInfo', JSON.stringify(userData), { expires: 7 });
+                    }
+                    
+                    console.log('用户信息已保存:', userData);
+                } catch (e) {
+                    console.error('保存用户信息失败:', e);
+                }
+            }
+
+            // 加载已保存的用户信息
+            function loadSavedUserInfo() {
+                console.log('尝试加载已保存的用户信息');
+                
+                try {
+                    const savedUserInfo = localStorage.getItem('userInfo');
+                    if (savedUserInfo) {
+                        const userData = JSON.parse(savedUserInfo);
+                        console.log('找到已保存的用户信息:', userData);
+                        
+                        // 填充表单
+                        if (userData.name) $('#userName').val(userData.name);
+                        if (userData.birthYear) $('#birthYear').val(userData.birthYear);
+                        if (userData.birthMonth) {
+                            $('#birthMonth').val(userData.birthMonth);
+                            // 触发月份变化以更新日期选项
+                            $('#birthMonth').trigger('change');
+                        }
+                        
+                        // 延迟设置日期，确保日期选项已更新
+                        setTimeout(() => {
+                            if (userData.birthDay) {
+                                $('#birthDay').val(userData.birthDay);
+                            }
+                            
+                            // 选择时辰
+                            if (userData.birthTime) {
+                                $(`input[name="birthTime"][value="${userData.birthTime}"]`).prop('checked', true);
+                            }
+                            
+                            // 重新验证表单
+                            validateForm();
+                        }, 200);
+                    }
+                } catch (e) {
+                    console.error('解析用户信息失败:', e);
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>
+
 </body>
 
 </html>
