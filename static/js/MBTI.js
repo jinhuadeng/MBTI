@@ -51,29 +51,34 @@ $(document).ready(function () {
             form.remove();
             next_form.css("display", "block");
         }, 520);
+        console.log("answers",answers)
+        // if (answers.length == 2) {//test
         if (answers.length == 93) {
             var page = ObtainingAnswers(answers)
 
-            window.location.href = `./personalities/${page}.html`;
-            //$.ajax({
-            //    type: 'post',
-            //    url: 'http://localhost:64883/common/Update/SubmitMBTI.ashx',
-            //    data: {
-            //        "answers": JSON.stringify(answers),
-            //        "result": page
-            //    },
-            //    async: false,
-            //    error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //        alert("Request Failed!");
-            //    },
-            //    success: function (data) {
-            //        if (data == "true") {
-            //            window.location.href = `./personalities/${page}.html`;
-            //        } else {
-            //            alert(data)
-            //        }
-            //    }
-            //})
+            // window.location.href = `./personalities/${page}.html`;
+            $.ajax({
+               type: 'post',
+               url: 'https://doc.shuoshilin.com/v1/mbti/report',
+               contentType: 'application/json',
+               data: JSON.stringify({
+                   "user": localStorage.getItem("userInfo"),
+                   "answers": JSON.stringify(answers),
+                   "result": page
+               }),
+               async: false,
+               error: function (XMLHttpRequest, textStatus, errorThrown) {
+                   alert("Request Failed!");
+               },
+               success: function (data) {
+                console.log(data)
+                   if (data.code ===0) {
+                       window.location.href = `./personalities/${page}.html`;
+                   } else {
+                       alert(data)
+                   }
+               }
+            })
         }
 
     })

@@ -1,0 +1,24 @@
+[
+    {
+        "question": "当你要外出一整天，你会",
+        "choice_a": {
+            "value": "J",
+            "text": "计划你要做什么和在什么时候做"
+        },
+        "choice_b": {
+            "value": "P",
+            "text": "说去就去"
+        }
+    },
+    {
+        "question": "你认为自己是一个",
+        "choice_a": {
+            "value": "P",
+            "text": "较为随兴所至的人"
+        },
+        "choice_b": {
+            "value": "J",
+            "text": "较为有条理的人"
+        }
+    }
+]
