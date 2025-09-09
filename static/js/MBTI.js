@@ -6,7 +6,7 @@ $(document).ready(function () {
     $.ajax({
         type: "get",
         // url: `./data/output-2.txt`,
-        url: `./data/output-3.txt`,
+        url: `./data/output.txt`,
         async: false,
         success: function (data) {
             var data = JSON.parse(data);
