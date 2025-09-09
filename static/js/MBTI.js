@@ -75,7 +75,7 @@ $(document).ready(function () {
                 console.log(data,page)
                    if (data.code ===0) {
 
-                    return false
+                  //  return false
                        window.location.href = `./personalities/${page}.html`;
                    } else {
                        alert(data)
