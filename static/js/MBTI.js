@@ -53,7 +53,7 @@ $(document).ready(function () {
         }, 520);
         console.log("answers",answers)
         // if (answers.length == 2) {//test
-        if (answers.length == 93) {
+        if (answers.length == 10) {
             var page = ObtainingAnswers(answers)
 
             // window.location.href = `./personalities/${page}.html`;
